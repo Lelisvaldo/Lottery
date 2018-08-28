@@ -6,7 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cep extends Model
 {
-    public function cliente(){
-        return $this->belongsTo('App\Cliente');
-    }
+    protected $table ='ceps';
+    protected $primaryKey='id';
+
+    public $timestamps = false;
+
+    protected $fillable = [
+        'id',
+        'cep'
+    ];
 }

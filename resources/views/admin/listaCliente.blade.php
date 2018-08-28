@@ -35,16 +35,18 @@
                                 <th>Cpf</th>
                                 <th>Data de Nascimento</th>
                                 <th>Genero</th>
+                                <th>Cep</th>
                             </tr>
                             @foreach($clientes as $cliente)
                                 <tr>
                                     <td>{{$cliente->id}}</td>
                                     <td>{{$cliente->nome}}</td>
                                     <td>{{$cliente->email}}</td>
-                                    <td>{{$cliente->telefone}}</td>
+                                    <td>{{$cliente->celular}}</td>
                                     <td>{{$cliente->cpf}}</td>
                                     <td>{{date( 'd/m/Y' , strtotime($cliente->dtnasc))}}</td>
                                     <td>{{$cliente->genero}}</td>
+                                    <td>{{$cliente->cep}}</td>
                                 </tr>
 
                             @endforeach

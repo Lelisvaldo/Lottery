@@ -6,7 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Telefone extends Model
 {
-    public function cliente(){
-        return $this->belongsTo('App\Cliente');
-    }
+    protected $table ='telefones';
+    protected $primaryKey='id';
+
+    public $timestamps = false;
+
+    protected $fillable = [
+        'celular',
+        'cliente_id'
+    ];
 }

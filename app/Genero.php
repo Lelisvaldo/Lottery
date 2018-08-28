@@ -8,7 +8,12 @@ use Cliente;
 class Genero extends Model
 {
 
-    public function clientes(){
-        return $this->hasMany(Cliente::class);
-    }
+    protected $table ='generos';
+    protected $primaryKey='id';
+
+    public $timestamps = false;
+
+    protected $fillable = [
+        'genero'
+    ];
 }

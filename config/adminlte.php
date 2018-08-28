@@ -117,7 +117,7 @@ return [
         [
             'text'        => 'Home',
             'url'         => 'admin',
-            'icon'        => 'home',
+            'icon'        => 'tachometer',
         ],
         'CONFIGURAÇÃO DE CONTA',
         [
@@ -137,7 +137,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'Listar',
-                    'url'  => '³',
+                    'url'  => 'admin/clientes',
                 ],
                 [
                     'text'    => 'Level One',

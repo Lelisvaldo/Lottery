@@ -8,8 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cliente extends Model
 {
-    public function telefones(){
-        return $this->hasMany(Telefone::class);
-    }
+    protected $table ='clientes';
+    protected $primaryKey='id';
 
+    public $timestamps = false;
+
+    protected $fillable = [
+        'nome',
+        'email',
+        'cpf',
+        'dtnasc',
+        'genero_id'
+    ];
 }
