@@ -14,8 +14,7 @@ class ClienteController extends Controller
             ->join('cliente_cep', 'clientes.id', '=', 'cliente_cep.cliente_id')
             ->join('ceps', 'clientes.id', '=', 'ceps.id')
             ->select('clientes.id','clientes.nome','clientes.email','clientes.cpf','clientes.dtnasc','generos.genero','telefones.celular','ceps.cep')
-            ->get()
-            ->paginate(25);
+            ->paginate(5);
         //dd($clientes);
         return view('admin.listaCliente', compact('clientes'));
     }

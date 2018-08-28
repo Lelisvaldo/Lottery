@@ -53,6 +53,9 @@
 
                         </tbody>
                     </table>
+                    <div align="center">
+                        {!!$clientes->links()!!}
+                    </div>
                 </div>
                 <!-- /.box-body -->
             </div>
