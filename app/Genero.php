@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Cliente;
 
 class Genero extends Model
 {
-    public function cliente(){
-        return $this->belongsTo('App\Cliente');
+
+    public function clientes(){
+        return $this->hasMany(Cliente::class);
     }
 }
