@@ -26,16 +26,18 @@
             </div>
             <!-- /.col -->
             <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+                <a class="text-black" href="{{route('sorteio.index')}}">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-aqua"><i class="ion ion-ios-shuffle"></i></span>
 
-                    <div class="info-box-content">
-                        <span class="info-box-text">CPU Traffic</span>
-                        <span class="info-box-number">90<small>%</small></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Sorteios Cadastrados</span>
+                            <span class="info-box-number">10</span>
+                        </div>
+                        <!-- /.info-box-content -->
                     </div>
-                    <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
+                    <!-- /.info-box -->
+                </a>
             </div>
             <!-- /.col -->
             <div class="col-md-3 col-sm-6 col-xs-12">

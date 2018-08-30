@@ -41,6 +41,17 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             @if (Route::has('login'))
                 <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item mx-0 mx-lg-1">
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Sorteios</a>
+                        </li>
+                        <li class="nav-item mx-0 mx-lg-1">
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">About</a>
+                        </li>
+                        {{--<li class="nav-item mx-0 mx-lg-1">
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">Contact</a>
+                        </li>--}}
+                    </ul>
                     @auth
                         <li class="nav-item mx-0 mx-lg-1">
                             <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url('/admin') }}">
@@ -57,17 +68,6 @@
                     @endauth
                 </ul>
             @endif
-            {{--            <ul class="navbar-nav ml-auto">
-                <li class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Portfolio</a>
-                </li>
-                <li class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">About</a>
-                </li>
-                <li class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">Contact</a>
-                </li>
-            </ul>--}}
         </div>
     </div>
 </nav>
@@ -179,7 +179,7 @@
 </section>
 
 <!-- Contact Section -->
-<section id="contact">
+{{--<section id="contact">
     <div class="container">
         <h2 class="text-center text-uppercase text-secondary mb-0">Contact Me</h2>
         <hr class="star-dark mb-5">
@@ -232,7 +232,7 @@
             </div>
         </div>
     </div>
-</section>
+</section>--}}
 
 <!-- Footer -->
 <footer class="footer text-center">

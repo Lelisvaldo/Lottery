@@ -12,8 +12,10 @@ class Sorteio extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'nome_sorteio',
+        'titulo_sorteio',
         'descricao_sorteio',
         'brinde_sorteio',
-        'foto_sorteio'
+        'foto_sorteio',
+        'data_inicio',
+        'data_fim'
     ];}

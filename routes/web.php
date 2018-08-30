@@ -19,7 +19,7 @@
     //ADMIN
     $this->group(['middleware' => ['auth'], 'namespace' => 'Admin'], function (){
         $this->get('admin', 'AdminController@index')->name('admin');
-        $this->get('admin/clientes', 'ClienteController@listaCliente')->name('cliente.index');
+        $this->get('admin/clientes', 'ClienteController@listaClientes')->name('cliente.index');
+        $this->get('admin/sorteios', 'SorteioController@listaSorteios')->name('sorteio.index');
     });
-
     Auth::routes();

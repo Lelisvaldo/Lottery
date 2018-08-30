@@ -137,35 +137,20 @@ return [
             'submenu' => [
                 [
                     'text' => 'Listar',
+                    'icon'    => 'list-ul',
                     'url'  => 'admin/clientes',
                 ],
+            ],
+        ],
+        'SORTEIOS',
+        [
+            'text'    => 'Sorteios',
+            'icon'    => 'random',
+            'submenu' => [
                 [
-                    'text'    => 'Level One',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'Level Two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'Level Two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'Level Three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'Level Three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'Level One',
-                    'url'  => '#',
+                    'text' => 'Listar',
+                    'icon'    => 'list-ul',
+                    'url'  => 'admin/sorteios',
                 ],
             ],
         ],

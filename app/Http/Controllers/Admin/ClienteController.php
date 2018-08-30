@@ -6,9 +6,8 @@ use App\Cliente;
 use \Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ClienteController extends Controller
-{
-    public function listaCliente(){
+class ClienteController extends Controller{
+    public function listaClientes(){
         $clientes = Cliente::join('generos', 'clientes.genero_id', '=', 'generos.id')
             ->join('telefones', 'clientes.id', '=', 'telefones.cliente_id')
             ->join('cliente_cep', 'clientes.id', '=', 'cliente_cep.cliente_id')
@@ -16,10 +15,10 @@ class ClienteController extends Controller
             ->select('clientes.id','clientes.nome','clientes.email','clientes.cpf','clientes.dtnasc','generos.genero','telefones.celular','ceps.cep')
             ->paginate(5);
         //dd($clientes);
-        return view('admin.listaCliente', compact('clientes'));
+        return view('admin.listaClientes', compact('clientes'));
     }
 
-/*    public function createTelefone($celular,$clienteId){
+    /*public function createTelefone($celular,$clienteId){
         DB::table('cliente_endereco')->insert([
             'celular' => $celular,
             'cliente_id' => $clienteId,
