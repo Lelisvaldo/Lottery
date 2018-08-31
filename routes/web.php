@@ -21,5 +21,8 @@
         $this->get('admin', 'AdminController@index')->name('admin');
         $this->get('admin/clientes', 'ClienteController@listaClientes')->name('cliente.index');
         $this->get('admin/sorteios', 'SorteioController@listaSorteios')->name('sorteio.index');
+        //insere o sorteio
+        $this->post('admin/save', 'SorteioController@crudSorteio')->name('sorteio.save');
+
     });
     Auth::routes();
