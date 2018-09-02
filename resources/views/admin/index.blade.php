@@ -32,7 +32,7 @@
 
                         <div class="info-box-content">
                             <span class="info-box-text">Sorteios Cadastrados</span>
-                            <span class="info-box-number">10</span>
+                            <span class="info-box-number">{{$countSorteios}}</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SorteioFormSaveRequest extends FormRequest
+class GeneroRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class SorteioFormSaveRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,12 +24,7 @@ class SorteioFormSaveRequest extends FormRequest
     public function rules()
     {
         return [
-            'titulo_sorteio' => 'required|string',
-            'descricao_sorteio' => 'required|string',
-            'brinde_sorteio' => 'required|string',
-            'foto_sorteio' => 'nullable|image|mimes:jpeg,bmp,png',
-            'data_inicio'=> 'required|date_format:Y-m-d',
-            'data_fim'=> 'required|date_format:Y-m-d'
+            'genero' => 'required|string|max:60',
         ];
     }
 }

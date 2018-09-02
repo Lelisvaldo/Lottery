@@ -10,7 +10,7 @@
 @section('content')
     @include('partials.admin._alerts')
     <div class="row">
-        <div class="col-sm-12 col-md-12 col-xs-6">
+        <div class="col-sm-12 col-md-12 col-xs-12">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">Cadastrar Sorteio</h3>
@@ -29,7 +29,7 @@
                         <label>Descrição</label>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-align-left"></i></span>
-                            <input type="text" class="form-control" placeholder="Descrição do Sorteio" maxlength="45" name="descricao_sorteio" required>
+                            <input type="text" class="form-control" placeholder="Descrição do Sorteio" maxlength="300" name="descricao_sorteio" required>
                         </div>
                         <br>
 
@@ -67,7 +67,7 @@
                         <label>Imagem</label>
                         <div class="file-input file-input-ajax-new">
                             <div class="file-preview">
-                                <input id="input-b1" name="foto_sorteio" type="file" class="file">
+                                <input id="input-b1" name="foto_sorteio" type="file" class="file" required>
                             </div>
                         </div>
                         <br>
@@ -99,14 +99,14 @@
                                 <th>Data Fim</th>
                                 <th>Alteração</th>
                             </tr>
-                            @foreach($soteios as $soteios)
+                            @foreach($soteios as $soteio)
                                 <tr>
-                                    <td>{{$soteios->id}}</td>
-                                    <td>{{$soteios->titulo_sorteio}}</td>
-                                    <td>{{$soteios->descricao_sorteio}}</td>
-                                    <td>{{$soteios->brinde_sorteio}}</td>
-                                    <td>{{$soteios->data_inicio}}</td>
-                                    <td>{{$soteios->data_fim}}</td>
+                                    <td>{{$soteio->id}}</td>
+                                    <td>{{$soteio->titulo_sorteio}}</td>
+                                    <td>{{$soteio->descricao_sorteio}}</td>
+                                    <td>{{$soteio->brinde_sorteio}}</td>
+                                    <td>{{date( 'd/m/Y' , strtotime($soteio->data_inicio))}}</td>
+                                    <td>{{date( 'd/m/Y' , strtotime($soteio->data_fim))}}</td>
                                     <td>
                                         <i class="fa fa-pencil"></i>
                                         &nbsp;
@@ -117,7 +117,7 @@
                         </tbody>
                     </table>
                     <div align="center">
-                        {{--{!!$clientes->links()!!}--}}
+                        {{ $soteios->links() }}
                     </div>
                 </div>
                 <!-- /.box-body -->

@@ -15,6 +15,10 @@
 
     //HOME
     $this->get('/', 'HomeController@index')->name('home');
+    $this->get('/participar', 'RegistroClienteController@indexInserirCliente')->name('registro.cliente');
+    //insere o sorteio
+    $this->post('/participar', 'RegistroClienteController@crudCliente')->name('cliente.save');
+
 
     //ADMIN
     $this->group(['middleware' => ['auth'], 'namespace' => 'Admin'], function (){
