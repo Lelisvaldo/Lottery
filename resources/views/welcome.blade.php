@@ -111,7 +111,8 @@
     <!-- Portfolio Modals -->
 
     <!-- Portfolio Modal 1 -->
-    <div class="portfolio-modal mfp-hide" id="portfolio-modal-1">
+    @foreach($sorteios as $sorteio)
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-{{$sorteio->id}}">
         <div class="portfolio-modal-dialog bg-white">
             <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
                 <i class="fa fa-3x fa-times"></i>
@@ -119,21 +120,21 @@
             <div class="container text-center">
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
-                        <h2 class="text-secondary text-uppercase mb-0">{{$sorteios[0]->titulo_sorteio}}</h2>
+                        <h2 class="text-secondary text-uppercase mb-0">{{$sorteio->titulo_sorteio}}</h2>
                         <hr class="star-dark mb-4">
-                        <img class="img-fluid mb-2" src="{{URL::asset($sorteios[0]->foto_sorteio)}}" alt="{{$sorteios[0]->titulo_sorteio}}">
-                        <p class="mb-2">Detalhes<br>{{$sorteios[0]->descricao_sorteio}}</p>
-                        <p class="mb-2">Premio<br>{{$sorteios[0]->brinde_sorteio}}</p>
-                        <p class="mb-2">Periodo de Inscrição<br><b>{{date( 'd/m/Y' , strtotime($sorteios[0]->data_inicio))}}</b>&nbsp;-&nbsp;<b>{{date( 'd/m/Y' , strtotime($sorteios[0]->data_fim))}}</b></p>
+                        <img class="img-fluid mb-2" src="{{URL::asset($sorteio->foto_sorteio)}}" alt="{{$sorteio->titulo_sorteio}}">
+                        <p class="mb-2">Detalhes<br>{{$sorteio->descricao_sorteio}}</p>
+                        <p class="mb-2">Premio<br>{{$sorteio->brinde_sorteio}}</p>
+                        <p class="mb-2">Periodo de Inscrição<br><b>{{date( 'd/m/Y' , strtotime($sorteio->data_inicio))}}</b>&nbsp;-&nbsp;<b>{{date( 'd/m/Y' , strtotime($sorteio->data_fim))}}</b></p>
 
-                        <a class="btn btn-primary btn-lg rounded-pill" href="{{route('registro.cliente')}}"><i class="fa fa-trophy"></i>&nbsp;Participar</a>
+                        <a class="btn btn-primary btn-lg rounded-pill" href="{{route('registro.cliente', $sorteio->id)}}"><i class="fa fa-trophy"></i>&nbsp;Participar</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Portfolio Modal 2 -->
+    @endforeach
+{{--    <!-- Portfolio Modal 2 -->
     <div class="portfolio-modal mfp-hide" id="portfolio-modal-2">
         <div class="portfolio-modal-dialog bg-white">
             <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
@@ -241,6 +242,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>--}}
 
 @stop

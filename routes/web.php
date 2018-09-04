@@ -15,15 +15,18 @@
 
     //HOME
     $this->get('/', 'HomeController@index')->name('home');
-    $this->get('/participar', 'RegistroClienteController@indexInserirCliente')->name('registro.cliente');
-    //insere o sorteio
-    $this->post('/participar', 'RegistroClienteController@crudCliente')->name('cliente.save');
+    $this->get('/participar/{id}', 'ClienteController@showCustomerRegistration')->name('registro.cliente');
+    //INSERE O SORTEIO
+    $this->post('/registrar/save', 'ClienteController@crudCliente')->name('cliente.save');
+    $this->post('/consulta/cpf', 'ClienteController@verificaCpf')->name('consulta.cpf');
+    $this->post('/consulta/telefone', 'ClienteController@verificaTelefone')->name('consulta.telefone');
+    $this->get('/painel', 'PainelClienteController@index')->name('painelClient.index');
 
 
     //ADMIN
     $this->group(['middleware' => ['auth'], 'namespace' => 'Admin'], function (){
         $this->get('admin', 'AdminController@index')->name('admin');
-        $this->get('admin/clientes', 'ClienteController@listaClientes')->name('cliente.index');
+        $this->get('admin/clientes', 'AdminController@listaClientes')->name('cliente.index');
         $this->get('admin/sorteios', 'SorteioController@listaSorteios')->name('sorteio.index');
         //insere o sorteio
         $this->post('admin/save', 'SorteioController@crudSorteio')->name('sorteio.save');
