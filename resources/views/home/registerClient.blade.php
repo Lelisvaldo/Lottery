@@ -27,14 +27,14 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Id Sorteio</label>
-                                <input class="form-control" id="sorteio_id" name="sorteio_id" type="text" placeholder="Id Sorteio" value="{{$sorteios->id}}" readonly required>
+                                <input class="form-control" id="sorteio_id" name="sorteio_id" type="text" placeholder="Id Sorteio" value="{{$sorteios->id}}" readonly>
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Id Participante</label>
-                                <input class="form-control" id="id_participante" name="id_participante" type="text" placeholder="ID Participante" value="" readonly required>
+                                <input class="form-control" id="id_participante" name="id_participante" type="text" placeholder="ID Participante" value="" readonly>
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Data de Nascimento</label>
                                 <input class="form-control" id="dtnasc" name="dtnasc" type="date" placeholder="Data de Nacimento"
-                                       data-validation-required-message="Please enter your phone number." value="" required>
+                                       data-validation-required-message="Please enter your Data de Nascimento." value="" required>
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -82,14 +82,14 @@
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Cep</label>
                                 <input class="form-control" id="cep" name="cep" type="text" placeholder="Cep"
-                                       data-validation-required-message="Please enter your phone number." maxlength="8" value="" required>
-                                <p class="help-block text-danger"></p>
+                                       data-validation-required-message="Please enter your Cep number." maxlength="8" value="" required>
+                                <p id="msg_cep" class="help-block text-danger"></p>
                             </div>
                         </div>
                         <div class="control-group">
                             <label>Genero</label>
                             <div class="form-group controls mb-0 pb-2">
-                                <select id="genero_id" name="genero_id" class="form-control" value="" required>
+                                <select id="genero_id" name="genero_id" class="form-control" required>
                                     <option value="">Escolha um Genero</option>
                                     @foreach($generos as $genero)
                                         <option value="{{$genero->id}}">{{$genero->genero}}</option>
@@ -112,12 +112,10 @@
     <script>
         //=====================================================================================================
         //AO PERDER O FOCO DO CAMPO PHONE
-        $('#phone').blur(function(e){
-            e.preventDefault();
-            var phone = $(this).val();
-            //console.log(phone);
+        $('#phone').blur(function(){
+            //console.log($(this).val());
+            let phone = $(this).val();
             $('#msg_phone').html("");
-
             if(phone.length == 11){
                 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
                 $.ajax({
@@ -125,41 +123,136 @@
                     type: 'post',
                     data: {_token: CSRF_TOKEN, phone: phone},
                     success: function (data) {
-                        if(data.phone.length > 0){
-                            console.log("existe cliente");
-                            //console.log(data);
-                            $('#id_participante').val(data.phone[0].id).attr('readonly', true);
-                            $('#phone').val(data.phone[0].celular).attr('readonly', true);
+                        if(data.phone != undefined){
+                            $('#phone').val(data.phone[0].celular);
                             $('#name').val(data.phone[0].nome).attr('readonly', true);
                             $('#email').val(data.phone[0].email).attr('readonly', true);
                             $('#cpf').val(data.phone[0].cpf).attr('readonly', true);
                             $('#cep').val(data.phone[0].cep).attr('readonly', true);
                             $('#dtnasc').val(data.phone[0].dtnasc).attr('readonly', true);
-                            $('#genero_id').val(data.phone[0].genero).attr('disabled', true);
-
-                            // $('#btnSalvarParticipante').attr('disabled', true).css('display', 'none');
-                            // $('#btnAlterarParticipante').css('display', 'block');
-                            // $('#btnParticiparSorteio').css('display', 'block');
-                            // $('#msg_cpf').css('display', 'none');
+                            $('#genero_id').val(data.phone[0].genero_id).attr('disabled', true);
                         }
                         else {
-                            //swal('Ops', 'Participante ainda não cadastrado.', 'info');
-                            $('#phone').val(phone);
+                            $('#name').removeAttr("readonly").val('');
+                            $('#email').removeAttr("readonly").val('');
+                            $('#cpf').removeAttr("readonly").val('');
+                            $('#cep').removeAttr("readonly").val('');
+                            $('#dtnasc').removeAttr("readonly").val('');
+                            $('#genero_id').removeAttr("readonly").val('');
                         }
                     }
+                });
+            }else {
+                console.log('NÃO CADASTRADO');
+                $('#name').removeAttr("readonly").val('');
+                $('#email').removeAttr("readonly").val('');
+                $('#cpf').removeAttr("readonly").val('');
+                $('#cep').removeAttr("readonly").val('');
+                $('#dtnasc').removeAttr("readonly").val('');
+                $('#genero_id').removeAttr("readonly").val('');
+            };
+        });
 
+        //=====================================================================================================
+        //AO PERDER O FOCO DO CAMPO CPF VERIFICA SE OS DADOS PREENCHIDOS ESTÃO CORRETOS
+        $('#cpf').blur(function(){
+            var cpf = $(this).val();
+            var cpfValido = validarCPF(cpf);
+            //console.log(cpf);
+            $('#msg_cpf').html("");
 
-                    /*success: function(data){
-                        if(data.phone.length > 0){
-                            $('#msg_phone').html("Telefone já existente.").css("color", "red").css("font-size", "small");
+            if(!cpfValido && cpf != "") {
+                $('#msg_cpf').html("CPF/CNPJ inválido.");
+                $("#sendMessageButton").attr("disabled", "disabled");
+            }
+            else if(cpf.length < 11 && cpf.length > 0){
+                $('#msg_cpf').html("CPF/CNPJ inválido.");
+                $("#sendMessageButton").attr("disabled", "disabled");
+            }
+            else if(cpf.length == 11){
+                var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    url: '{{ route('consulta.cpf') }}',
+                    type: 'post',
+                    data: {_token: CSRF_TOKEN, cpf: cpf},
+                    success: function(data){
+                        if(data.cpf.length > 0){
+                            $('#msg_cpf').html("CPF/CNPJ já existente.").css("color", "red").css("font-size", "small");
                             $("#sendMessageButton").attr("disabled", "disabled");
                         }
                         else{
-                            console.log("Cadastrar!!!");
+                            console.log("CPF OK");
                             $("#sendMessageButton").removeAttr("disabled");
                         }
-                    }*/
+                    }
                 });
+            }
+        });
+
+        //FUNÇÃO PARA VALIDAÇÃO DO CPF
+        function validarCPF(cpf){
+            var numeros, digitos, soma, i, resultado, digitos_iguais;
+            digitos_iguais = 1;
+            if (cpf.length < 11)
+                return false;
+            for (i = 0; i < cpf.length - 1; i++)
+                if (cpf.charAt(i) != cpf.charAt(i + 1))
+                {
+                    digitos_iguais = 0;
+                    break;
+                }
+            if (!digitos_iguais)
+            {
+                numeros = cpf.substring(0,9);
+                digitos = cpf.substring(9);
+                soma = 0;
+                for (i = 10; i > 1; i--)
+                    soma += numeros.charAt(10 - i) * i;
+                resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+                if (resultado != digitos.charAt(0))
+                    return false;
+                numeros = cpf.substring(0,10);
+                soma = 0;
+                for (i = 11; i > 1; i--)
+                    soma += numeros.charAt(11 - i) * i;
+                resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+                if (resultado != digitos.charAt(1))
+                    return false;
+                return true;
+            }
+            else
+                return false;
+        }
+
+        //QUANDO O CAMPO CEP PERDE O FOCO.
+        $("#cep").blur(function() {
+            //Nova variável "cep" somente com dígitos.
+            var cep = $(this).val().replace(/\D/g, '');
+            $('#msg_cep').html("");
+            //Verifica se campo cep possui valor informado.
+            if (cep != "") {
+                //Expressão regular para validar o CEP.
+                var validacep = /^[0-9]{8}$/;
+                //Valida o formato do CEP.
+                if(validacep.test(cep)) {
+                    //Consulta o webservice viacep.com.br/
+                    $.getJSON("//viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+                        if (!("erro" in dados)) {
+                            console.log('CEP Ok');
+                            $("#sendMessageButton").removeAttr("disabled");
+                        } //end if.
+                        else {
+                            //CEP pesquisado não foi encontrado.
+                            $('#msg_cep').html("CEP não encontrado.");
+                            $("#sendMessageButton").attr("disabled", "disabled");
+                        }
+                    });
+                } //end if.
+                else {
+                    //cep é inválido.
+                    $('#msg_cep').html("CEP inválido.");
+                    $("#sendMessageButton").attr("disabled", "disabled");
+                }
             }
         });
     </script>

@@ -8,18 +8,21 @@
             <hr class="star-dark mb-5">
             <div class="row">
                 @foreach($sorteios as $sorteio)
-                    <div class="col-md-6 col-lg-4 col-xl-4">
+                    <div class="col-md-12 col-lg-4 col-xl-4">
                         <a class="portfolio-item d-block mx-auto" href="#">
-                            <div class="portfolio-item-caption d-flex position-absolute h-100 w-50">
-                                <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                                    <i class="fa fa-search-plus fa-3x"></i>
-                                </div>
+                            <div class="d-flex position-absolute h-100 w-100">
+                                <div class="mx-auto mt-xl-5 text-white-50">{{$sorteio->titulo_sorteio}}</div>
                             </div>
-                            <img class="img-fluid h-50 w-50" src="{{URL::asset($sorteio->foto_sorteio)}}" alt="{{$sorteio->titulo_sorteio}}">
+
+                            <img class="img-fluid " src="{{URL::asset('/img/home/cupom.png')}}" alt="{{$sorteio->titulo_sorteio}}">
                         </a>
                     </div>
                 @endforeach
             </div>
         </div>
     </section>
+    @include('partials.home._scripts')
+    <script>
+
+    </script>
 @stop
