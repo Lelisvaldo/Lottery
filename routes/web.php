@@ -30,6 +30,8 @@
         $this->get('admin/sorteios', 'SorteioController@listaSorteios')->name('sorteio.index');
         //insere o sorteio
         $this->post('admin/save', 'SorteioController@crudSorteio')->name('sorteio.save');
+        //Sorteio
+        $this->get('admin/sortear', 'SorteioController@sortear')->name('sortear');
 
     });
     Auth::routes();

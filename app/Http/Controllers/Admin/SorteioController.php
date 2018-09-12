@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Cliente;
 use App\Sorteio;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,11 +16,18 @@ class SorteioController extends Controller{
         return view('admin.listaSorteios', ['soteios' => $soteios]);
     }
 
+    public function sortear(){
+        $participantes_sorteio = Cliente::all();
+        dd($participantes_sorteio);
+        return view('admin.sortear');
+    }
+
     public function crudSorteio(SorteioRequest $request){
         //RETIRA O NULL OU VAZIA DA IMAGEM
         if(($request->foto_sorteio == 'null') or ($request->foto_sorteio == '')){
            $imagePath = 'img/home/soteios_image/noimage.png';
-        }        elseif($request->hasfile('foto_sorteio')){
+        }
+        elseif($request->hasfile('foto_sorteio')){
             $file = $request->file('foto_sorteio');
             $extension = $file->getClientOriginalExtension(); // getting image extension
             $filename =time().'.'.$extension;

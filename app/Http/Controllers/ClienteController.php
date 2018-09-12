@@ -52,6 +52,10 @@ class ClienteController extends Controller{
     }
 
     public function crudCliente(Request $request ){
+        //dd($request->all());
+        global $clienteId;
+        global $nCupom;
+
         $nCupom = $this->randonCupom();
 
         $clienteSorteio = DB::table('cliente_sorteio')
@@ -77,10 +81,11 @@ class ClienteController extends Controller{
                     $cliente->dtnasc = $request->dtnasc;
                     $cliente->genero_id = $request->genero_id;
                     $cliente->save();
+                    $clienteId = $cliente->id;
 
                     $telefone = new Telefone();
-                    $telefone-> celular = $request->celular;
-                    $telefone-> cliente_id = $cliente->id;
+                    $telefone->celular = $request->celular;
+                    $telefone->cliente_id = $clienteId;
                     $telefone->save();
 
 
@@ -94,11 +99,12 @@ class ClienteController extends Controller{
                         $cepId = $cep->id;
                     }
 
-                    DB::table('cliente_cep')->insert(['cliente_id' => $cliente->id,'cep_id' => $cepId]);
 
-                    DB::table('cliente_sorteio')->insert(['cliente_id' => $cliente->id, 'sorteio_id' => $request->sorteio_id]);
+                    DB::table('cliente_cep')->insert(['cliente_id' => $clienteId,'cep_id' => $cepId]);
 
-                    DB::table('cupons')->insert(['cliente_id' => $request->id_participante , 'sorteio_id' => $sorteio_id, 'cupom_id' => $nCupom]);
+                    DB::table('cliente_sorteio')->insert(['cliente_id' => $clienteId, 'sorteio_id' => $request->sorteio_id]);
+
+                    DB::table('cupons')->insert(['cliente_id' => $clienteId , 'sorteio_id' => $sorteio_id, 'cupom_id' => $nCupom]);
 
                 }
                 catch (\ValidationException $e) {
@@ -117,7 +123,7 @@ class ClienteController extends Controller{
 
                 return response()->json([
                     "status" => 0,
-                    "Id"=> $cliente->id,
+                    "Id"=> $clienteId,
                     'nCupom' => $nCupom,
                     "nome" => $cliente->nome,
                     "celular"=>$telefone->celular
@@ -135,7 +141,7 @@ class ClienteController extends Controller{
 
                 return response()->json([
                     "status" => 0,
-                    "Id" => $request->id_participante,
+                    "Id" => $clienteId,
                     "cupom_id" => $nCupom,
                     "nome" => $request->nome,
                     "celular"=>$request->celular

@@ -152,6 +152,11 @@ return [
                     'icon'    => 'list-ul',
                     'url'  => 'admin/sorteios',
                 ],
+                [
+                    'text' => 'Sortear',
+                    'icon'    => 'trophy',
+                    'url'  => 'admin/sortear',
+                ],
             ],
         ],
         'LABELS',

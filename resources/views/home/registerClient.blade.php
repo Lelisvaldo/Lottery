@@ -102,7 +102,6 @@
         //=====================================================================================================
         //AO PERDER O FOCO DO CAMPO PHONE
         $('#phone').blur(function(){
-            //console.log($(this).val());
             let phone = $(this).val();
             $('#msg_phone').html("");
             if(phone.length == 11){
@@ -134,7 +133,6 @@
                     }
                 });
             }else {
-                console.log('NÃO CADASTRADO');
                 $('#name').removeAttr("readonly").val('');
                 $('#id_participante').val('');
                 $('#email').removeAttr("readonly").val('');
@@ -150,7 +148,6 @@
         $('#cpf').blur(function(){
             var cpf = $(this).val();
             var cpfValido = validarCPF(cpf);
-            //console.log(cpf);
             $('#msg_cpf').html("");
 
             if(!cpfValido && cpf != "") {
@@ -173,7 +170,6 @@
                             $("#sendMessageButton").attr("disabled", "disabled");
                         }
                         else{
-                            console.log("CPF OK");
                             $("#sendMessageButton").removeAttr("disabled");
                         }
                     }
@@ -230,7 +226,6 @@
                     //Consulta o webservice viacep.com.br/
                     $.getJSON("//viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
                         if (!("erro" in dados)) {
-                            console.log('CEP Ok');
                             $("#sendMessageButton").removeAttr("disabled");
                         } //end if.
                         else {
@@ -292,9 +287,7 @@
                             title: "Sucesso",
                             text: "Parabéns! Sua inscrição foi realizada com sucesso!",
                         }).then((valor) => {
-                            console.log('Out IF');
                             if (valor){
-                                console.log('In IF');
                                 let mensagem = "Olá,%20%2A" + data.nome +"%2A%20agora%20o%20Sr(a)%20está%20participando%20de%20nosso%20sorteio%20Shopping%20Vip-X%20" +
                                     "e%20o%20seu%20cupom%20de%20sorteio%20é%20o%20%2Anúmero%2A%20%2A" + data.cupom_id +".%2A%0A" +
                                     "%0A" +
