@@ -1,5 +1,6 @@
 @extends('layouts.home.home')
 
+
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="mt-4"> </div>
@@ -21,23 +22,11 @@
                 <div class="col-lg-8 mx-auto">
                     <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
                     <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
-                    <form action="{{route('cliente.save')}}" method="post" enctype="multipart/form-data">
+                    <form enctype="multipart/form-data">
                         {{csrf_field()}}
                         <!--Id Do sorteio-->
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label>Id Sorteio</label>
-                                <input class="form-control" id="sorteio_id" name="sorteio_id" type="text" placeholder="Id Sorteio" value="{{$sorteios->id}}" readonly>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label>Id Participante</label>
-                                <input class="form-control" id="id_participante" name="id_participante" type="text" placeholder="ID Participante" value="" readonly>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
+                        <input class="form-control" id="sorteio_id" name="sorteio_id" type="text" placeholder="Id Sorteio" value="{{$sorteios->id}}" hidden readonly>
+                        <input class="form-control" id="id_participante" name="id_participante" type="text" placeholder="ID Participante" value="" hidden readonly>
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Celular</label>
@@ -100,7 +89,7 @@
                         <br>
                         <div id="success"></div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-xl" id="sendMessageButton" >Participar</button>
+                            <button type="button" class="btn btn-primary btn-xl" id="sendMessageButton" >Participar</button>
                         </div>
                     </form>
                 </div>
@@ -121,19 +110,21 @@
                 $.ajax({
                     url: '{{ route('consulta.telefone') }}',
                     type: 'post',
-                    data: {_token: CSRF_TOKEN, phone: phone},
+                    data: {_token: CSRF_TOKEN, celular: phone},
                     success: function (data) {
                         if(data.phone != undefined){
                             $('#phone').val(data.phone[0].celular);
+                            $('#id_participante').val(data.phone[0].id);
                             $('#name').val(data.phone[0].nome).attr('readonly', true);
                             $('#email').val(data.phone[0].email).attr('readonly', true);
                             $('#cpf').val(data.phone[0].cpf).attr('readonly', true);
                             $('#cep').val(data.phone[0].cep).attr('readonly', true);
                             $('#dtnasc').val(data.phone[0].dtnasc).attr('readonly', true);
-                            $('#genero_id').val(data.phone[0].genero_id).attr('disabled', true);
+                            $('#genero_id').val(data.phone[0].genero_id).attr('readonly', true);
                         }
                         else {
                             $('#name').removeAttr("readonly").val('');
+                            $('#id_participante').val('');
                             $('#email').removeAttr("readonly").val('');
                             $('#cpf').removeAttr("readonly").val('');
                             $('#cep').removeAttr("readonly").val('');
@@ -145,6 +136,7 @@
             }else {
                 console.log('NÃO CADASTRADO');
                 $('#name').removeAttr("readonly").val('');
+                $('#id_participante').val('');
                 $('#email').removeAttr("readonly").val('');
                 $('#cpf').removeAttr("readonly").val('');
                 $('#cep').removeAttr("readonly").val('');
@@ -255,6 +247,91 @@
                 }
             }
         });
+
+        //==================================================================================
+        //BOTÃO PARA SALVAR AS ALTERAÇÕES DOS DADOS DO PARTICIPANTE
+        $('#sendMessageButton').click(function() {
+            let nomeCliente = $('#name').val();
+            let sorteio_id = $('#sorteio_id').val();
+            let id_participante = $('#id_participante').val();
+            let phone = $('#phone').val().replace();
+            let email = $('#email').val();
+            let cpf = $('#cpf').val();
+            let cep = $('#cep').val();
+            let dtnasc = $('#dtnasc').val();
+            let genero = $('#genero_id').val();
+
+            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
+            $.ajax({
+                url: '{{route('cliente.save')}}',
+                type: 'post',
+                data: {
+                    _token: CSRF_TOKEN,
+                    sorteio_id: sorteio_id,
+                    id_participante: id_participante,
+                    nome: nomeCliente,
+                    email: email,
+                    cpf: cpf,
+                    celular: phone,
+                    cep: cep,
+                    dtnasc: dtnasc,
+                    genero_id: genero
+                },
+                success: function (data) {
+                    if (data.status == 1) {
+                        swal({
+                            type: 'warning',
+                            title: 'Oops...',
+                            text: "Você ja esta participando desse sorteio!",
+                        })
+                    }
+                    else if (data.status == 0) {
+                        swal({
+                            type: "success",
+                            title: "Sucesso",
+                            text: "Parabéns! Sua inscrição foi realizada com sucesso!",
+                        }).then((valor) => {
+                            console.log('Out IF');
+                            if (valor){
+                                console.log('In IF');
+                                let mensagem = "Olá,%20%2A" + data.nome +"%2A%20agora%20o%20Sr(a)%20está%20participando%20de%20nosso%20sorteio%20Shopping%20Vip-X%20" +
+                                    "e%20o%20seu%20cupom%20de%20sorteio%20é%20o%20%2Anúmero%2A%20%2A" + data.cupom_id +".%2A%0A" +
+                                    "%0A" +
+                                    "Acompanhe%20diariamente%20os%20sorteios%20Ao%20Vivo%20no%20nosso%20Instagram%20www.instagram.com/maktubbeautycare/%20ou%20" +
+                                    "@maktubbeautycare.%0A" +
+                                    "%0A" +
+                                    "Serão%20sorteios%20diários%20de%20até%205%20unhas%20por%20dia%20e%201%20sorteio%20semanal%20de%20Alongamento%20de%20Cílios,%20" +
+                                    "Hidratação%20com%20Escova,%20Designer%20de%20Sobrancelha%20e%20Maquiagem%20Expressa.%0A" +
+                                    "%0A" +
+                                    "Aproveite%20e%20conheça%20nosso%20novo%20site:%20www.vipx.com.br,%20use%20o%20%2Acupom%2A%20%2AVIPX5%2A%20em%20suas%20compres%20online%20" +
+                                    "e%20ganhe%2010%25%20de%20desconto."+
+                                    "%0A" +
+                                    "%0A%2AEm%2A%20%2Aapoio:%2A%20www.instagram.com/shoppingvipx/";
+
+                                let wpp = "https://api.whatsapp.com/send?phone=55" + data.celular + "&text=" + mensagem;
+
+                                window.open(wpp, '_blank');
+
+                                window.location.href = "{{url('/painel')}}" + "/" + id_participante;
+                            }
+                        });
+                    }
+                    else if (data.status == 2) {
+                        swal({
+                            type: 'error',
+                            title: data.mError,
+                            text: "Error! Sua inscrição  não foi realizada.",
+                            footer: data.dError
+                        })
+                        .then(() => {
+                            window.location.href = '{{route('home')}}';
+                        });
+                    }
+                }
+            });
+        });
+
     </script>
 
 @stop

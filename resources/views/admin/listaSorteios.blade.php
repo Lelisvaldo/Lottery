@@ -22,21 +22,21 @@
                         <label>Titulo do Sorteio</label>
                         <div class="input-group">
                             <span class="input-group-addon">T</span>
-                            <input type="text" class="form-control" placeholder="Titulo do Sorteio" maxlength="45" name="titulo_sorteio" required>
+                            <input type="text" class="form-control" placeholder="Titulo do Sorteio" maxlength="20" name="titulo_sorteio" required>
                         </div>
                         <br>
 
                         <label>Descrição</label>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-align-left"></i></span>
-                            <input type="text" class="form-control" placeholder="Descrição do Sorteio" maxlength="300" name="descricao_sorteio" required>
+                            <input type="text" class="form-control" placeholder="Descrição do Sorteio" maxlength="81" name="descricao_sorteio" required>
                         </div>
                         <br>
 
                         <label>Brinde</label>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-trophy"></i></span>
-                            <input type="text" class="form-control" placeholder="Descrição  do Sorteio" maxlength="100" name="brinde_sorteio" required>
+                            <input type="text" class="form-control" placeholder="Brinde  do Sorteio" maxlength="25" name="brinde_sorteio" required>
                         </div>
                         <br>
 

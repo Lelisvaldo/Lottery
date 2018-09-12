@@ -14,12 +14,11 @@ use Illuminate\Support\Facades\DB;
 class ClienteController extends Controller{
     //============================================================
     //GERA NUMERO DO CUPOM
-    public function randonCupon(){
+    public function randonCupom(){
         return strtoupper(uniqid(rand(5,5)));
     }
 
     public function showCustomerRegistration($id){
-
         $generos = Genero::all();
         $sorteios = Sorteio::find($id);
 
@@ -35,82 +34,113 @@ class ClienteController extends Controller{
     //============================================================
     //VERIFICA O CELULAR PARA QUE NÃO POSSA CADASTRAR DOIS CELULARES IGUAIS
     public function verificaPhone(Request $request){
-        //dd($request->all());
-        $phone_achado = Telefone::where('celular', '=', $request->phone)->get();
+
+        $phone_achado = Telefone::where('celular', '=', $request->celular)->get();
+
         if(count($phone_achado) > 0 ){
-            $clientes = Cliente::where('clientes.id', '=' , $phone_achado[0]->cliente_id)
+            $clientes = DB::table('clientes')
+            ->where('clientes.id', '=' , $phone_achado[0]->cliente_id)
                 ->join('generos', 'clientes.genero_id', '=', 'generos.id')
                 ->join('telefones', 'clientes.id', '=', 'telefones.cliente_id')
                 ->join('cliente_cep', 'clientes.id', '=', 'cliente_cep.cliente_id')
-                ->join('ceps', 'clientes.id', '=', 'ceps.id')
+                ->join('ceps', 'cliente_cep.cep_id', '=', 'ceps.id')
                 ->select('clientes.id','clientes.nome','clientes.email','clientes.cpf','clientes.dtnasc','clientes.genero_id','telefones.celular','ceps.cep')
                 ->get();
 
-            //dd($clientes->all());
             return response()->json(['phone' => $clientes]);
         }else{return "false";}
     }
 
     public function crudCliente(Request $request ){
-        try {
-            $cep = Cep::where('cep', '=', $request->cep)->get();
-            //dd( $cep->all());
-            //dd( $cep[0]->id);
+        $nCupom = $this->randonCupom();
 
-            $cliente = new Cliente();
-            $cliente->nome = $request->nome;
-            $cliente->email = $request->email;
-            $cliente->cpf = $request->cpf;
-            $cliente->dtnasc = $request->dtnasc;
-            $cliente->genero_id = $request->genero_id;
-            $cliente->save();
+        $clienteSorteio = DB::table('cliente_sorteio')
+            ->where([
+                ['cliente_id', '=', $request->id_participante],
+                ['sorteio_id', '=', $request->sorteio_id],
+            ])->count();
 
-            $telefone = new Telefone();
-            $telefone-> celular = $request->celular;
-            $telefone-> cliente_id = $cliente->id;
-            $telefone->save();
+        if($clienteSorteio == 1){
+            return response()->json(["status" => 1]);
+        }
+        else if($clienteSorteio == 0){
+            if (($request->id_participante) == null){
+                try {
+                    $sorteio_id =  $request->sorteio_id;
+
+                    $cep = Cep::where('cep', '=', $request->cep)->get();
+
+                    $cliente = new Cliente();
+                    $cliente->nome = $request->nome;
+                    $cliente->email = $request->email;
+                    $cliente->cpf = $request->cpf;
+                    $cliente->dtnasc = $request->dtnasc;
+                    $cliente->genero_id = $request->genero_id;
+                    $cliente->save();
+
+                    $telefone = new Telefone();
+                    $telefone-> celular = $request->celular;
+                    $telefone-> cliente_id = $cliente->id;
+                    $telefone->save();
 
 
-            if(count($cep)>0){
-                $cepId = $cep[0]->id;
+                    if(count($cep)>0){
+                        $cepId = $cep[0]->id;
+                    }
+                    else{
+                        $cep = new Cep();
+                        $cep->cep = $request->cep;
+                        $cep->save();
+                        $cepId = $cep->id;
+                    }
+
+                    DB::table('cliente_cep')->insert(['cliente_id' => $cliente->id,'cep_id' => $cepId]);
+
+                    DB::table('cliente_sorteio')->insert(['cliente_id' => $cliente->id, 'sorteio_id' => $request->sorteio_id]);
+
+                    DB::table('cupons')->insert(['cliente_id' => $request->id_participante , 'sorteio_id' => $sorteio_id, 'cupom_id' => $nCupom]);
+
+                }
+                catch (\ValidationException $e) {
+                    return response()->json(["status" => 2, 'mError'=> 'ValidationException']);
+                }
+                catch (\QueryException $e) {
+                    return response()->json(["status" => 2, 'mError'=> 'QueryException']);
+                }
+                catch (\PDOException $e) {
+                    $e->getMessage();
+                    return response()->json(["status" => 2, 'mError'=> 'PDOException', 'dError' => $e]);
+                }
+                catch (\Exception $e) {
+                    throw $e;
+                }
+
+                return response()->json([
+                    "status" => 0,
+                    "Id"=> $cliente->id,
+                    'nCupom' => $nCupom,
+                    "nome" => $cliente->nome,
+                    "celular"=>$telefone->celular
+                ]);
             }
             else{
-                $cep = new Cep();
-                $cep->cep = $request->cep;
-                $cep->save();
-                $cepId = $cep->id;
+                try{
+                    DB::table('cliente_sorteio')->insert(['cliente_id' => $request->id_participante, 'sorteio_id' => $request->sorteio_id]);
+                    DB::table('cupons')->insert(['cliente_id' => $request->id_participante , 'sorteio_id' => $request->sorteio_id, 'cupom_id' => $nCupom]);
+                }
+                catch (\ValidationException $e) {return response()->json(["status" => 2, 'mError'=> 'ValidationException']);}
+                catch (\QueryException $e) {return response()->json(["status" => 2, 'mError'=> 'QueryException']);}
+                catch (\PDOException $e) {return response()->json(["status" => 2, 'mError'=> 'PDOException']);}
+                catch (\Exception $e) {throw $e;}
+
+                return response()->json([
+                    "status" => 0,
+                    "Id" => $request->id_participante,
+                    "cupom_id" => $nCupom,
+                    "nome" => $request->nome,
+                    "celular"=>$request->celular
+                ]);
             }
-            //dd($cepId);
-
-            DB::table('cliente_cep')->insert(
-                ['cliente_id' => $cliente->id,'cep_id' => $cepId]
-            );
-
-            DB::table('cliente_sorteio')->insert(
-                ['cliente_id' => $cliente->id, 'sorteio_id' => $request->sorteio_id]
-            );
-
-            DB::table('cupons')->insert(
-                ['cliente_id' => $cliente->id , 'cupom_id' => strtoupper(uniqid(rand(5,5)))]
-            );
-
         }
-        catch (\ValidationException $e) {
-            return redirect()->route('painelClient.index')->with('nosuccess', 'Erro ao Cadastrar Cliente');
-        }
-        catch (\QueryException $e) {
-            return redirect()->route('painelClient.index')->with('nosuccess', 'Erro ao Cadastrar Cliente');
-        }
-        catch (\PDOException $e) {
-            //return $e->getMessage();
-            return redirect()->route('painelClient.index')->with('nosuccess', 'Erro ao Cadastrar Cliente');
-        }
-        catch (\Exception $e) {
-            throw $e;
-        }
-
-        return redirect()->route('painelClient.index')->with('success', 'Cliente Cadastrado com Sucesso');
     }
-
-
 }

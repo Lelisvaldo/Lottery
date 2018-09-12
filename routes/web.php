@@ -20,7 +20,7 @@
     $this->post('/registrar/save', 'ClienteController@crudCliente')->name('cliente.save');
     $this->post('/consulta/cpf', 'ClienteController@verificaCpf')->name('consulta.cpf');
     $this->post('/consulta/telefone', 'ClienteController@verificaPhone')->name('consulta.telefone');
-    $this->get('/painel', 'PainelClienteController@index')->name('painelClient.index');
+    $this->get('/painel/{id}', 'PainelClienteController@index')->name('painelClient.index');
 
 
     //ADMIN
